@@ -1,0 +1,140 @@
+<div class="prediction-container">
+  <div class="prediction-header">
+    <h1><mat-icon>trending_up</mat-icon> Prédiction de Chiffre d'Affaires</h1>
+    <p>Utilisez notre IA pour prédire le chiffre d'affaires futur de SNDP AGIL</p>
+  </div>
+
+  <div class="prediction-content">
+    <div class="prediction-form-section">
+      <mat-card class="form-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>settings</mat-icon>
+            Paramètres de Prédiction
+          </mat-card-title>
+          <mat-card-subtitle>
+            Configurez votre prédiction personnalisée
+          </mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <form [formGroup]="predictionForm" (ngSubmit)="onPredict()" class="prediction-form">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Mois de prédiction</mat-label>
+              <mat-select formControlName="month">
+                <mat-option *ngFor="let month of months" [value]="month.value">
+                  {{ month.name }}
+                </mat-option>
+              </mat-select>
+              <mat-icon matSuffix>calendar_month</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Année</mat-label>
+              <mat-select formControlName="year">
+                <mat-option *ngFor="let year of years" [value]="year">
+                  {{ year }}
+                </mat-option>
+              </mat-select>
+              <mat-icon matSuffix>calendar_today</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nombre de périodes</mat-label>
+              <input matInput type="number" formControlName="periods" min="1" max="24">
+              <mat-icon matSuffix>schedule</mat-icon>
+              <mat-hint>Nombre de mois à prédire (1-24)</mat-hint>
+            </mat-form-field>
+
+            <div class="form-actions">
+              <button mat-raised-button color="primary" type="submit" 
+                      [disabled]="predictionForm.invalid || loading" class="predict-button">
+                <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+                <mat-icon *ngIf="!loading">analytics</mat-icon>
+                <span>{{ loading ? 'Calcul en cours...' : 'Prédire' }}</span>
+              </button>
+              
+              <button mat-button type="button" (click)="getDefaultPrediction()" 
+                      [disabled]="loading" class="default-button">
+                <mat-icon>auto_awesome</mat-icon>
+                Prédiction par défaut
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- API Status Card -->
+      <mat-card class="status-card">
+        <mat-card-content>
+          <h3><mat-icon>api</mat-icon> Statut API Flask</h3>
+          <div class="api-status" [class.offline]="!apiConnected">
+            <mat-icon>{{ apiConnected ? 'check_circle' : 'error' }}</mat-icon>
+            <span>{{ apiConnected ? 'Connecté' : 'Déconnecté (Mode Démo)' }}</span>
+          </div>
+          <p class="api-info">
+            {{ apiConnected ? 'API Flask accessible' : 'Utilisation de données simulées pour la démonstration' }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="prediction-results-section">
+      <mat-card class="results-card" *ngIf="predictionResult">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>bar_chart</mat-icon>
+            Résultat de Prédiction
+          </mat-card-title>
+          <mat-card-subtitle>
+            {{ predictionResult.period }}
+          </mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="result-display">
+            <div class="main-result">
+              <span class="result-label">Chiffre d'Affaires Prédit</span>
+              <span class="result-value">{{ predictionResult.prediction | currency:'EUR':'symbol':'1.0-0' }}</span>
+            </div>
+            
+            <div class="confidence-interval" *ngIf="predictionResult.confidence_interval">
+              <h4>Intervalle de Confiance</h4>
+              <div class="interval-range">
+                <span class="interval-item">
+                  <strong>Min:</strong> {{ predictionResult.confidence_interval.lower | currency:'EUR':'symbol':'1.0-0' }}
+                </span>
+                <span class="interval-item">
+                  <strong>Max:</strong> {{ predictionResult.confidence_interval.upper | currency:'EUR':'symbol':'1.0-0' }}
+                </span>
+              </div>
+            </div>
+            
+            <div class="result-actions">
+              <button mat-raised-button color="accent" (click)="showGraph()" class="graph-button">
+                <mat-icon>show_chart</mat-icon>
+                Voir le Graphique
+              </button>
+              
+              <button mat-stroked-button (click)="exportResults()" class="export-button">
+                <mat-icon>download</mat-icon>
+                Exporter
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Default message when no results -->
+      <mat-card class="placeholder-card" *ngIf="!predictionResult && !loading">
+        <mat-card-content>
+          <div class="placeholder-content">
+            <mat-icon>analytics</mat-icon>
+            <h3>Aucune Prédiction</h3>
+            <p>Configurez vos paramètres et cliquez sur "Prédire" pour obtenir une estimation du chiffre d'affaires.</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
