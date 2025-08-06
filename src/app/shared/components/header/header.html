@@ -1,0 +1,41 @@
+<mat-toolbar color="primary" class="app-header">
+  <div class="toolbar-content">
+    <!-- Logo -->
+    <div class="logo-section">
+      <span class="logo-text" routerLink="/">SNDP AGIL</span>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-section" *ngIf="isAuthenticated$ | async">
+      <a mat-button routerLink="/" routerLinkActive="active">Accueil</a>
+      <a mat-button routerLink="/dashboard" routerLinkActive="active">Dashboards</a>
+      <a mat-button routerLink="/prediction" routerLinkActive="active">Prédiction</a>
+    </nav>
+
+    <!-- User Section -->
+    <div class="user-section">
+      <ng-container *ngIf="isAuthenticated$ | async; else loginButton">
+        <button mat-icon-button [matMenuTriggerFor]="userMenu">
+          <mat-icon>account_circle</mat-icon>
+        </button>
+        <mat-menu #userMenu="matMenu">
+          <div class="user-info">
+            <p class="user-name">{{ (currentUser$ | async)?.firstName }} {{ (currentUser$ | async)?.lastName }}</p>
+            <p class="user-email">{{ (currentUser$ | async)?.email }}</p>
+          </div>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>exit_to_app</mat-icon>
+            <span>Déconnexion</span>
+          </button>
+        </mat-menu>
+      </ng-container>
+      
+      <ng-template #loginButton>
+        <button mat-raised-button color="accent" routerLink="/login">
+          Connexion
+        </button>
+      </ng-template>
+    </div>
+  </div>
+</mat-toolbar>

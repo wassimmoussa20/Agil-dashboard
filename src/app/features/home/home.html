@@ -1,0 +1,136 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1>SNDP AGIL</h1>
+        <h2>Société Nationale de Distribution des Produits Agiles</h2>
+        <p class="hero-description">
+          Leader en solutions énergétiques innovantes, SNDP AGIL vous accompagne vers un avenir durable 
+          avec des technologies de pointe et des services de qualité supérieure.
+        </p>
+        <div class="hero-actions" *ngIf="!(isAuthenticated$ | async)">
+          <button mat-raised-button color="primary" class="cta-button" (click)="scrollToLogin()">
+            Se connecter
+          </button>
+          <button mat-stroked-button color="primary" class="cta-button-secondary">
+            En savoir plus
+          </button>
+        </div>
+      </div>
+      <div class="hero-image">
+        <mat-icon class="hero-icon">bolt</mat-icon>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Section -->
+  <section class="products-section">
+    <div class="section-content">
+      <h2>Nos Produits et Services</h2>
+      <div class="products-grid">
+        <div class="product-card">
+          <mat-icon>solar_power</mat-icon>
+          <h3>Énergie Solaire</h3>
+          <p>Solutions photovoltaïques innovantes pour particuliers et entreprises</p>
+        </div>
+        <div class="product-card">
+          <mat-icon>battery_charging_full</mat-icon>
+          <h3>Stockage d'Énergie</h3>
+          <p>Systèmes de batteries intelligents pour optimiser votre consommation</p>
+        </div>
+        <div class="product-card">
+          <mat-icon>analytics</mat-icon>
+          <h3>Analyse & Prédiction</h3>
+          <p>Tableaux de bord avancés et prédictions de performance énergétique</p>
+        </div>
+        <div class="product-card">
+          <mat-icon>smart_button</mat-icon>
+          <h3>Solutions Smart</h3>
+          <p>Technologies intelligentes pour une gestion énergétique optimale</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Login Section -->
+  <section class="login-section" #loginSection *ngIf="!(isAuthenticated$ | async)">
+    <div class="section-content">
+      <div class="login-container">
+        <mat-card class="login-card">
+          <mat-card-header>
+            <mat-card-title>Accès Tableau de Bord</mat-card-title>
+            <mat-card-subtitle>Connectez-vous pour accéder à vos données</mat-card-subtitle>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Email</mat-label>
+                <input matInput type="email" formControlName="email" placeholder="votre.email@example.com">
+                <mat-icon matSuffix>email</mat-icon>
+                <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+                  Email requis
+                </mat-error>
+                <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+                  Format email invalide
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Mot de passe</mat-label>
+                <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+                <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+                  <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+                  Mot de passe requis
+                </mat-error>
+              </mat-form-field>
+
+              <div class="form-actions">
+                <button mat-raised-button color="primary" type="submit" 
+                        [disabled]="loginForm.invalid || loading" class="login-button">
+                  <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+                  <span *ngIf="!loading">Se connecter</span>
+                </button>
+                
+                <button mat-button type="button" color="accent" (click)="onForgotPassword()">
+                  Mot de passe oublié ?
+                </button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+        
+        <div class="demo-credentials">
+          <mat-card class="demo-card">
+            <mat-card-content>
+              <h4><mat-icon>info</mat-icon> Compte de démonstration</h4>
+              <p><strong>Email:</strong> admin@sndp-agil.com</p>
+              <p><strong>Mot de passe:</strong> admin123</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dashboard Preview for Authenticated Users -->
+  <section class="dashboard-preview" *ngIf="isAuthenticated$ | async">
+    <div class="section-content">
+      <h2>Bienvenue, {{ (currentUser$ | async)?.firstName }}!</h2>
+      <p>Accédez à vos tableaux de bord et prédictions</p>
+      <div class="dashboard-actions">
+        <button mat-raised-button color="primary" routerLink="/dashboard" class="dashboard-button">
+          <mat-icon>dashboard</mat-icon>
+          Voir Dashboards
+        </button>
+        <button mat-raised-button color="accent" routerLink="/prediction" class="prediction-button">
+          <mat-icon>trending_up</mat-icon>
+          Prédictions
+        </button>
+      </div>
+    </div>
+  </section>
+</div>

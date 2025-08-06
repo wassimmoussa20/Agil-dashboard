@@ -1,0 +1,61 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1><mat-icon>dashboard</mat-icon> Dashboard Power BI</h1>
+    <p>Tableau de bord interactif pour l'analyse des données SNDP AGIL</p>
+  </div>
+
+  <div class="dashboard-content">
+    <mat-card class="powerbi-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>analytics</mat-icon>
+          Tableau de Bord Principal
+        </mat-card-title>
+        <mat-card-subtitle>
+          Données en temps réel et analyses avancées
+        </mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="powerbi-container">
+          <iframe 
+            [src]="powerBiUrl" 
+            class="powerbi-iframe"
+            frameborder="0" 
+            allowFullScreen="true">
+          </iframe>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="dashboard-info">
+      <mat-card class="info-card">
+        <mat-card-content>
+          <h3><mat-icon>info</mat-icon> Instructions</h3>
+          <ul>
+            <li>Utilisez les filtres intégrés pour analyser les données</li>
+            <li>Cliquez sur les graphiques pour des détails supplémentaires</li>
+            <li>Les données sont mises à jour automatiquement</li>
+            <li>Utilisez le mode plein écran pour une meilleure visualisation</li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="info-card">
+        <mat-card-content>
+          <h3><mat-icon>trending_up</mat-icon> Données Clés</h3>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-value">{{ currentMonth }}</span>
+              <span class="stat-label">Mois Actuel</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">{{ currentYear }}</span>
+              <span class="stat-label">Année</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
